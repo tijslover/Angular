@@ -14,20 +14,60 @@
   </mat-form-field>
 
 </div>
-<mat-selection-list #users>
-  <mat-list-option *ngFor="let user of usersList; let i=index" [ngClass]="{ gray: i%2}">
+
+<div class="line">
+  <mat-form-field class="item" appearance="outline">
+    <mat-label>Username</mat-label>
+    <input matInput placeholder="Username" [(ngModel)]="username">
+
+  </mat-form-field>
+
+  <mat-form-field class="item" appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput placeholder="Name" [(ngModel)]="name">
+
+  </mat-form-field>
+
+  <mat-form-field class="item" appearance="outline">
+    <mat-label>User role</mat-label>
+    <mat-select [(ngModel)]="role">
+      <mat-option value="Admin">Admin</mat-option>
+      <mat-option value="User">User</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button class="btn" color="primary" (click)="addUser()">Добавить</button>
+
+
+</div>
+
+<div *ngIf="usersList.length>0 ; else empty">
+  <mat-selection-list #users (selectionChange)="selectItem(users.selectedOptions.selected)">
+    <mat-list-option [value]="user" *ngFor="let user of usersList; let i=index" [ngClass]="{ gray: i%2}">
+      <div>
+        <span class="item">{{user.username}}</span>
+        <span class="item">{{user.name}}</span>
+        <span class='item' *ngIf="user.role === 'Admin'">{{user.role}}</span>
+      </div>
+
+    </mat-list-option>
+  </mat-selection-list>
+
+  <div class="line footer">
     <div>
-      <span class="item">{{user.username}}</span>
-      <span class="item">{{user.name}}</span>
-      <span class='item' *ngIf="user.role === 'Admin'">{{user.role}}</span>
+      Выбрано пользователей: {{users.selectedOptions.selected.length}}
     </div>
+    <div><button mat-raised-button class="btn" color="warn" (click)="deleteUsers()">Удалить</button></div>
+  </div>
+</div>
 
-  </mat-list-option>
-</mat-selection-list>
+<ng-template #empty>
+  <div>Пользователей не найдено!</div>
+</ng-template>
 
-<p>
-  Options selected: {{users.selectedOptions.selected.length}}
-</p>
+
+
+
 
 <!-- <div *ngFor=" let user of usersList">
         <span *ngIf="user.role === 'Admin'">
